@@ -33,7 +33,8 @@ public class UserService {
         if (isExistsThisUser(user)) {
             return false;
         }
-        maxId.incrementAndGet();
+        //Mb conflicts if user.id set maxId in something else place
+        user.setId(maxId.incrementAndGet());
         dataBase.put(user.getId(), user);
         return true;
     }
