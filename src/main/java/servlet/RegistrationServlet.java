@@ -34,6 +34,7 @@ public class RegistrationServlet extends HttpServlet {
         User user = new User(req.getParameter("email"), req.getParameter("password"));
         //For test
         System.out.println("In RegistrationServlet method POST");
+        System.out.println(userService);
 
         if (userService.isExistsThisUser(user)) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -45,7 +46,7 @@ public class RegistrationServlet extends HttpServlet {
         }
 
         for (User u : userService.getAllUsers()) {
-            System.out.println("User: " + u.getEmail());
+            System.out.println("User registration : " + u.getEmail() + " " + u.getPassword());
         }
 
         resp.setContentType("text/html;charset=utf-8");

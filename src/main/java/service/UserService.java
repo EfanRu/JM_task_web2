@@ -17,7 +17,7 @@ public class UserService {
 
     private UserService() {}
 
-    public static synchronized UserService getInstance() {
+    public static UserService getInstance() {
         return instance == null ? new UserService() : instance;
     }
 
