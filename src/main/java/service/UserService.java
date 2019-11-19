@@ -45,7 +45,12 @@ public class UserService {
     }
 
     public boolean isExistsThisUser(User user) {
-        return dataBase.containsKey(user.getId());
+        for (User u : getAllUsers()) {
+            if (u.getEmail().equals(user.getEmail())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public List<User> getAllAuth() {

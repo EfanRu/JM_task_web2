@@ -1,5 +1,7 @@
 package servlet;
 
+import model.User;
+import service.UserService;
 import util.PageGenerator;
 
 import javax.servlet.ServletException;
@@ -11,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RegistrationServlet extends HttpServlet {
+    private UserService userService = UserService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -23,7 +26,29 @@ public class RegistrationServlet extends HttpServlet {
 
         resp.setContentType("text/html;charset=utf-8");
         resp.setStatus(HttpServletResponse.SC_OK);
+    }
 
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Map<String, Object> pageVariables = createPageVariablesMap(req);
+        User user = new User(req.getParameter("email"), req.getParameter("password"));
+        //For test
+        System.out.println("In RegistrationServlet method POST");
+
+        if (userService.isExistsThisUser(user)) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().println("Login is used");
+        } else {
+            userService.addUser(user);
+            resp.getWriter().println("User accepted");
+            resp.setStatus(HttpServletResponse.SC_OK);
+        }
+
+        for (User u : userService.getAllUsers()) {
+            System.out.println("User: " + u.getEmail());
+        }
+
+        resp.setContentType("text/html;charset=utf-8");
     }
 
     private static Map<String, Object> createPageVariablesMap(HttpServletRequest request) {
@@ -35,8 +60,4 @@ public class RegistrationServlet extends HttpServlet {
         return pageVariables;
     }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
-    }
 }
