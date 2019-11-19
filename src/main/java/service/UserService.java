@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class UserService {
-    private static UserService instance;
+    private static final UserService instance = new UserService();
 
     /* хранилище данных */
     private Map<Long, User> dataBase = Collections.synchronizedMap(new HashMap<>());
