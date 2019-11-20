@@ -19,27 +19,29 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Map<String, Object> pageVariables = createPageVariablesMap(req);
         User user = new User(req.getParameter("email"), req.getParameter("password"));
-
-        if (userService.isExistsThisUser(user)) {
-            for (User u : userService.getAllUsers()) {
-                if (u.getEmail().equals(user.getEmail())) {
-                    user = u;
+//mb need user with id???
+        for (User u : userService.getAllUsers()) {
+            if (u.getEmail().equals(user.getEmail()) &&
+                    u.getPassword().equals(user.getPassword())) {
+                if (userService.isExistsThisUser(user)) {
+                   //Mb need check from id???
+//                    user = u;
+                    if (userService.isUserAuthById(u.getId())) {
+                        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                        resp.getWriter().println("Login is already authorization user by id : " +
+                                u.getId());
+                    } else {
+                        userService.authUser(u);
+                        resp.getWriter().println("User " + u.getId() +" successful login");
+                        resp.setStatus(HttpServletResponse.SC_OK);
+                    }
+                } else {
+                    resp.getWriter().println("User " + user.getEmail() +" didn't registered");
+                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 }
+                break;
             }
-            if (userService.isUserAuthById(user.getId())) {
-                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                resp.getWriter().println("Login is already authorization user by id : " +
-                        user.getId());
-            } else {
-                userService.authUser(user);
-                resp.getWriter().println("User " + user.getId() +" successful login");
-                resp.setStatus(HttpServletResponse.SC_OK);
-            }
-        } else {
-            resp.getWriter().println("User " + user.getEmail() +" didn't registered");
-            resp.setStatus(HttpServletResponse.SC_OK);
         }
-
         resp.setContentType("text/html;charset=utf-8");
     }
 

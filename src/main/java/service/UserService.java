@@ -40,17 +40,20 @@ public class UserService {
     }
 
     public void deleteAllUser() {
+        logoutAllUsers();
         dataBase.clear();
         maxId = new AtomicLong(0);
     }
 
     public boolean isExistsThisUser(User user) {
         for (User u : getAllUsers()) {
-            if (u.getEmail().equals(user.getEmail())) {
-                return true;
+            if (u.getEmail().equals(user.getEmail()) &&
+                    u.getPassword().equals(user.getPassword())) {
+                    return true;
             }
         }
         return false;
+//        return dataBase.get(user.getId()).equals(user);
     }
 
     public List<User> getAllAuth() {
@@ -58,11 +61,16 @@ public class UserService {
     }
 
     public boolean authUser(User user) {
-        if (isUserAuthById(user.getId())) {
+        if (!isExistsThisUser(user)) {
+            return false;
+        } else if (isUserAuthById(user.getId())) {
+            return false;
+        } else if (dataBase.get(user.getId()).equals(user)) {
+            authMap.put(user.getId(), user);
+            return true;
+        } else {
             return false;
         }
-        authMap.put(user.getId(), user);
-        return true;
     }
 
     public void logoutAllUsers() {

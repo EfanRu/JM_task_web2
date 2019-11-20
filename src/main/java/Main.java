@@ -13,7 +13,7 @@ public class Main {
         RegistrationServlet regServlet = new RegistrationServlet();
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.addServlet(new ServletHolder(apiServlet), "/api");
+        context.addServlet(new ServletHolder(apiServlet), "/api/*");
         context.addServlet(new ServletHolder(loginServlet), "/login");
         context.addServlet(new ServletHolder(regServlet), "/register");
 

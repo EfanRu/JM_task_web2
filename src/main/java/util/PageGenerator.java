@@ -11,7 +11,7 @@ import java.io.Writer;
 import java.util.Map;
 
 public class PageGenerator {
-    private static PageGenerator instance;
+    private static PageGenerator instance = new PageGenerator();
     private static final String HTML_DIR = "templates";
     private final Configuration cfg;
 
@@ -30,7 +30,7 @@ public class PageGenerator {
         cfg = new Configuration();
     }
 
-    public static synchronized PageGenerator getInstance() {
+    public static PageGenerator getInstance() {
         return instance == null ? new PageGenerator() : instance;
     }
 }
