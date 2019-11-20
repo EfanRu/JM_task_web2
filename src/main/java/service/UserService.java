@@ -22,7 +22,7 @@ public class UserService {
     }
 
     public List<User> getAllUsers() {
-        return new LinkedList<>(dataBase.values());
+        return new ArrayList<>(dataBase.values());
     }
 
     public User getUserById(Long id) {
@@ -40,36 +40,29 @@ public class UserService {
     }
 
     public void deleteAllUser() {
-        logoutAllUsers();
         dataBase.clear();
         maxId = new AtomicLong(0);
     }
 
     public boolean isExistsThisUser(User user) {
-        for (User u : getAllUsers()) {
-            if (u.getEmail().equals(user.getEmail()) &&
-                    u.getPassword().equals(user.getPassword())) {
-                    return true;
-            }
-        }
-        return false;
-//        return dataBase.get(user.getId()).equals(user);
+        return dataBase.values().contains(user);
     }
 
     public List<User> getAllAuth() {
-        return new LinkedList<>(authMap.values());
+        return new ArrayList<>(authMap.values());
     }
 
     public boolean authUser(User user) {
         if (!isExistsThisUser(user)) {
             return false;
-        } else if (isUserAuthById(user.getId())) {
-            return false;
-        } else if (dataBase.get(user.getId()).equals(user)) {
-            authMap.put(user.getId(), user);
-            return true;
         } else {
-            return false;
+            user = getUserFromServlet(user);
+            if (isUserAuthById(user.getId())) {
+                return false;
+            } else {
+                authMap.put(user.getId(), user);
+                return true;
+            }
         }
     }
 
@@ -79,5 +72,14 @@ public class UserService {
 
     public boolean isUserAuthById(Long id) {
         return authMap.containsKey(id);
+    }
+
+    private User getUserFromServlet(User user) {
+        for (User u : getAllUsers()) {
+            if (u.equals(user)) {
+                return u;
+            }
+        }
+        return user;
     }
 }

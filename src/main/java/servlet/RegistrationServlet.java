@@ -38,7 +38,6 @@ public class RegistrationServlet extends HttpServlet {
             resp.getWriter().println("User accepted");
             resp.setStatus(HttpServletResponse.SC_OK);
         }
-
         resp.setContentType("text/html;charset=utf-8");
     }
 
