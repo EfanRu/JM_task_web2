@@ -21,27 +21,26 @@ public class LoginServlet extends HttpServlet {
         User user = new User(req.getParameter("email"), req.getParameter("password"));
 //mb need user with id???
         for (User u : userService.getAllUsers()) {
-            if (u.getEmail().equals(user.getEmail()) &&
-                    u.getPassword().equals(user.getPassword())) {
+            user = u;
+        }
+            if (user.getEmail().equals(user.getEmail()) &&
+                    user.getPassword().equals(user.getPassword())) {
                 if (userService.isExistsThisUser(user)) {
                    //Mb need check from id???
-//                    user = u;
-                    if (userService.isUserAuthById(u.getId())) {
+                    if (userService.isUserAuthById(user.getId())) {
                         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                         resp.getWriter().println("Login is already authorization user by id : " +
-                                u.getId());
+                                user.getId());
                     } else {
-                        userService.authUser(u);
-                        resp.getWriter().println("User " + u.getId() +" successful login");
+                        userService.authUser(user);
+                        resp.getWriter().println("User " + user.getId() +" successful login");
                         resp.setStatus(HttpServletResponse.SC_OK);
                     }
                 } else {
                     resp.getWriter().println("User " + user.getEmail() +" didn't registered");
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 }
-                break;
             }
-        }
         resp.setContentType("text/html;charset=utf-8");
     }
 
